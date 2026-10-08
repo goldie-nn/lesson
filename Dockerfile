@@ -1,4 +1,5 @@
 FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
 RUN apt install git default-jdk maven tomcat9 -y
 RUN git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
