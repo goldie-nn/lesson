@@ -13,8 +13,15 @@ services:
       mvn clean package -Dmaven.compiler.source=1.8 &&
       cp target/hello-1.0.war /app/target/ROOT.war
       "
-
-
+  prod:
+    image: tomcat:10.1-jre17-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - artifacts:/usr/local/tomcat/webapps
+    depends_on:
+      - java-builder
+    restart: always
 
 volumes:
   artifacts:
