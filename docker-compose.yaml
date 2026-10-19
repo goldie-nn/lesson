@@ -13,3 +13,8 @@ services:
       mvn clean package &&
       cp target/hello-1.0.war /app/target/ROOT.war
       "
+
+
+
+volumes:
+  artifacts:
