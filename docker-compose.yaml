@@ -20,7 +20,7 @@ services:
     volumes:
       - artifacts:/usr/local/tomcat/webapps
     depends_on:
-      - java-builder
+      - builder
     restart: always
 
 volumes:
