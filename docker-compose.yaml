@@ -14,7 +14,7 @@ services:
       cp target/hello-1.0.war /app/target/ROOT.war
       "
   prod:
-    image: tomcat:10.1-jre17-alpine
+    image: tomcat:10.1-jre17-temurin-alpine
     ports:
       - "8080:8080"
     volumes:
