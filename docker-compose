@@ -1,1 +1,15 @@
 version: '3.7'
+
+services:
+  builder:
+    image: maven:3.9.6-eclipse-temurin-17
+    volumes:
+      - artifacts:/app/target
+    working_dir: /app
+    command: >
+      sh -c "
+      git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello.git &&
+      cd boxfuse-sample-java-war-hello &&
+      mvn clean package &&
+      cp target/hello-1.0.war /app/target/ROOT.war
+      "
