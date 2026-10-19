@@ -10,7 +10,7 @@ services:
       sh -c "
       git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello.git &&
       cd boxfuse-sample-java-war-hello &&
-      mvn clean package &&
+      mvn clean package -Dmaven.compiler.source=1.8 &&
       cp target/hello-1.0.war /app/target/ROOT.war
       "
 
