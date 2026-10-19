@@ -1,0 +1,73 @@
+---
+- name: Building war
+  hosts: build
+  become: true
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install git, java, maven, mc
+      apt:
+        name:
+          - git
+          - openjdk-11-jdk
+          - maven
+          - mc
+        state: present
+
+    - name: git clone repository java testbox
+      git:
+        repo: 'https://github.com/boxfuse/boxfuse-sample-java-war-hello'
+        dest: /opt/boxfuse-sample
+        version: master
+        force: yes
+
+    - name: build  with maven
+      command: mvn clean package
+      args:
+        chdir: /opt/boxfuse-sample
+
+    - name: pick up war
+      fetch:
+        src: /opt/boxfuse-sample/target/hello-1.0.war
+        dest: /tmp/hello.war
+        flat: yes
+
+- name: deploy in prod
+  hosts: prod
+  become: true
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install java, tomcat
+      apt:
+        name:
+          - openjdk-11-jre
+          - tomcat9
+        state: present
+
+    - name: start tomcat service & enable
+      systemd:
+        name: tomcat9
+        state: started
+        enabled: yes
+
+    - name: put war to prod
+      copy:
+        src: /tmp/hello.war
+        dest: /var/lib/tomcat9/webapps/ROOT.war
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+      notify: reload tomcat
+
+  handlers:
+    - name: reload tomcat
+      systemd:
+        name: tomcat9
+        state: restarted
